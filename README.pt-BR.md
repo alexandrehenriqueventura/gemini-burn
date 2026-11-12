@@ -1,7 +1,7 @@
 # 🔥 gemini-burn
 
 <p align="center">
-  <img src="gemini-burn-widget/assets/social_preview.png" alt="gemini-burn" width="100%" />
+  <img src="assets/hero-showcase.png" alt="gemini-burn macOS WidgetKit Showcase" width="100%" />
 </p>
 
 <p align="center">
@@ -22,6 +22,36 @@
 
 ---
 
+## 📸 Galeria de Widgets
+
+Widgets nativos **WidgetKit** rodando no macOS nos três tamanhos suportados:
+
+<table>
+  <tr>
+    <th align="center">Small (Pequeno)</th>
+    <th align="center">Medium (Médio)</th>
+    <th align="center">Large (Grande)</th>
+  </tr>
+  <tr>
+    <td align="center" valign="middle">
+      <img src="assets/widget-small.png" alt="Widget Gemini Burn Pequeno" width="180" />
+    </td>
+    <td align="center" valign="middle">
+      <img src="assets/widget-medium.png" alt="Widget Gemini Burn Médio" width="320" />
+    </td>
+    <td align="center" valign="middle">
+      <img src="assets/widget-large.png" alt="Widget Gemini Burn Grande" width="300" />
+    </td>
+  </tr>
+  <tr>
+    <td align="center"><sub>Requisições de hoje, tokens, ritmo/h e % da cota</sub></td>
+    <td align="center"><sub>Resumo diário, tokens in/out, semana e gráfico de 7 dias</sub></td>
+    <td align="center"><sub>Visão completa, ferramentas, gráfico com pico e modelo ativo</sub></td>
+  </tr>
+</table>
+
+---
+
 ## ✨ Funcionalidades
 
 - **Extensão Nativa WidgetKit para macOS (`Small`, `Medium`, `Large`)**:
@@ -39,12 +69,17 @@
   - Pacote nativo macOS (`.app`) com extensão WidgetKit integrada (`GeminiBurnMac/`).
   - Dashboard web local (`--web`) e painel interativo no terminal (`--cli`) via backend `gemini-burn-widget/`.
 
+<p align="center">
+  <img src="assets/telemetry-architecture.png" alt="Estados Dinâmicos de Consumo e Arquitetura de Telemetria Local" width="100%" />
+</p>
+
 ---
 
 ## 📁 Estrutura do Projeto
 
 ```text
 gemini-burn/
+├── assets/                       # Capturas dos widgets e visuais gerados no Stitch
 ├── GeminiBurnMac/                # App nativo macOS e extensão WidgetKit (Swift / SwiftUI)
 │   ├── Package.swift
 │   ├── build.sh                  # Compila gemini-burn.app + GeminiBurnWidget.appex

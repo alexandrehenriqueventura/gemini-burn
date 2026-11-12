@@ -31,6 +31,12 @@ mkdir -p "$BUILD_DIR/release"
 mkdir -p "$APP_BUNDLE/Contents/MacOS"
 mkdir -p "$RESOURCES_DIR"
 
+PATH_MARKER="$BUILD_DIR/.project_path"
+if [ ! -f "$PATH_MARKER" ] || [ "$(cat "$PATH_MARKER")" != "$PROJECT_DIR" ]; then
+    rm -rf "$BUILD_DIR/ModuleCache"
+    printf '%s' "$PROJECT_DIR" > "$PATH_MARKER"
+fi
+
 SDK_PATH=$(xcrun --show-sdk-path)
 HOST_ARCH=$(uname -m)
 
@@ -109,15 +115,22 @@ codesign --force --sign - "$APP_BUNDLE"
 
 echo "✅ Build complete: $APP_BUNDLE"
 
-pluginkit -a "$WIDGET_BUNDLE" 2>/dev/null || true
+LSREGISTER="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister"
+TARGET_APP="$APP_BUNDLE"
 
 if [ "$INSTALL_APP" = true ]; then
     echo "📲 Installing to /Applications/$APP_NAME.app..."
     rm -rf "/Applications/$APP_NAME.app"
     cp -R "$APP_BUNDLE" "/Applications/$APP_NAME.app"
-    echo "✅ Installed to /Applications/$APP_NAME.app"
+    TARGET_APP="/Applications/$APP_NAME.app"
+    echo "✅ Installed to $TARGET_APP"
 fi
 
+TARGET_WIDGET="$TARGET_APP/Contents/PlugIns/$WIDGET_NAME.appex"
+"$LSREGISTER" -f "$TARGET_APP" 2>/dev/null || true
+pluginkit -a "$TARGET_WIDGET" 2>/dev/null || true
+pluginkit -e use -i "com.geminiburn.mac.widget" 2>/dev/null || true
+
 if [ "$RUN_APP" = true ]; then
-    open "$APP_BUNDLE"
+    open "$TARGET_APP"
 fi
