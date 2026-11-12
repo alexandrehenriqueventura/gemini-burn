@@ -1,0 +1,12 @@
+{
+  "name": "Gemini Burn",
+  "description": "Monitor de consumo diário e semanal de requisições e tokens do Gemini e Antigravity na barra superior do Zorin OS.",
+  "uuid": "gemini-burn@andreporto",
+  "shell-version": [
+    "45",
+    "46",
+    "47"
+  ],
+  "version": 2,
+  "url": "https://github.com/andreporto/gemini-burn-widget"
+}

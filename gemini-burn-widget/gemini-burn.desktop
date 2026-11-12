@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Gemini Burn
+Comment=Widget Flutuante de Monitoramento de Tokens e Requisições do Gemini e Antigravity
+Exec=sh -c 'DIR="$HOME/.local/share/gemini-burn"; [ -f "$DIR/main.py" ] && python3 "$DIR/main.py" --widget || python3 "$HOME/Documentos/GitHub/gemini-burn-widget/main.py" --widget'
+Icon=utilities-system-monitor
+Terminal=false
+Type=Application
+Categories=Development;Utility;System;Monitor;
+StartupNotify=true

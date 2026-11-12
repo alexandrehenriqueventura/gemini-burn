@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gemini Burn • Antigravity Monitor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-base: #1c1c1e;
+      --app-glass-bg: rgba(47, 47, 47, 0.85);
+      --card-bg: #151515;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-border-hover: rgba(255, 255, 255, 0.16);
+      --text-primary: #f5f5f7;
+      --text-secondary: #a1a1a6;
+      --text-muted: #86868b;
+      
+      --accent-gemini: #6366f1;
+      --accent-gemini-gradient: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+      
+      --accent-flame-1: #ff9f0a;
+      --accent-flame-2: #ff453a;
+      --accent-flame-3: #ec4899;
+      --flame-gradient: linear-gradient(135deg, #ff9f0a 0%, #ff453a 100%);
+      --burn-gradient: linear-gradient(90deg, #ff9f0a, #ff453a, #af52de);
+      
+      --success: #30d158;
+      --warning: #ff9f0a;
+      --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-mono: 'SF Mono', 'JetBrains Mono', Menlo, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      background-color: transparent;
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      width: 100vw;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 12px;
+      overflow-x: hidden;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.15) transparent;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Container Principal - Estilo Apple Widget Glassmorphism (#2f2f2f + blur) */
+    .widget-container {
+      width: 100%;
+      max-width: 360px;
+      background: var(--app-glass-bg);
+      backdrop-filter: blur(30px) saturate(190%);
+      -webkit-backdrop-filter: blur(30px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 26px;
+      box-shadow: 0 24px 50px -10px rgba(0, 0, 0, 0.65),
+                  0 0 0 1px rgba(255, 255, 255, 0.12) inset;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Barra Superior com Alça de Arraste */
+    .widget-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: grab;
+      padding-bottom: 2px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding-bottom: 10px;
+    }
+
+    .widget-header:active {
+      cursor: grabbing;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .flame-icon-box {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.2) 0%, rgba(239, 68, 68, 0.15) 100%);
+      border: 1px solid rgba(249, 115, 22, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      animation: flamePulse 2.5s infinite alternate ease-in-out;
+    }
+
+    @keyframes flamePulse {
+      0% { transform: scale(0.97); box-shadow: 0 0 6px rgba(249, 115, 22, 0.2); }
+      100% { transform: scale(1.04); box-shadow: 0 0 14px rgba(239, 68, 68, 0.5); }
+    }
+
+    .brand-title {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, #ffffff 30%, #f97316 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-subtitle {
+      font-size: 9px;
+      color: var(--text-muted);
+      font-weight: 500;
+      letter-spacing: 0.2px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 8px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 600;
+      color: #34d399;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      background-color: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #10b981;
+      animation: dotPulse 1.8s infinite;
+    }
+
+    @keyframes dotPulse {
+      0% { opacity: 0.4; }
+      50% { opacity: 1; }
+      100% { opacity: 0.4; }
+    }
+
+    .icon-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-secondary);
+      width: 26px;
+      height: 26px;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+
+    .icon-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: var(--text-primary);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .icon-btn.spinning svg {
+      animation: spin 0.8s linear;
+    }
+
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Card Principal - Daily Burn (Estilo Apple Squircle #151515) */
+    .burn-hero-card {
+      background: #151515;
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    }
+
+    .burn-hero-card::before {
+      content: '';
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle, rgba(249, 115, 22, 0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .card-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .pace-pill {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 8px;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      color: #fbbf24;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .pace-pill.fire {
+      background: rgba(239, 68, 68, 0.18);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #f87171;
+    }
+
+    .metrics-big-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-top: 2px;
+    }
+
+    .metric-value-box {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .big-number {
+      font-family: var(--font-mono);
+      font-size: 26px;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1;
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .number-unit {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .metric-sub {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+      font-family: var(--font-mono);
+    }
+
+    /* Barra de Progresso com Brilho */
+    .progress-section {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-top: 4px;
+    }
+
+    .progress-bar-bg {
+      height: 7px;
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--burn-gradient);
+      border-radius: 6px;
+      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+    }
+
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .progress-pct {
+      color: #fb923c;
+      font-weight: 700;
+      font-family: var(--font-mono);
+    }
+
+    /* Grid de Estatísticas Secundárias */
+    .stats-dual-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .stat-mini-card {
+      background: #151515;
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+    }
+
+    .mini-card-title {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .mini-card-val {
+      font-family: var(--font-mono);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .mini-card-sub {
+      font-size: 10px;
+      color: var(--text-secondary);
+    }
+
+    /* Gráfico de Barras dos 7 Dias */
+    .sparkline-section {
+      background: #151515;
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    }
+
+    .sparkline-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .bars-container {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      height: 52px;
+      padding-top: 6px;
+      gap: 5px;
+    }
+
+    .bar-column {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      height: 100%;
+      justify-content: flex-end;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .bar-fill {
+      width: 100%;
+      min-height: 4px;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 4px 4px 2px 2px;
+      transition: height 0.4s ease, background 0.2s;
+    }
+
+    .bar-column:hover .bar-fill {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .bar-column.is-today .bar-fill {
+      background: var(--burn-gradient);
+      box-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
+    }
+
+    .bar-label {
+      font-size: 9px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .bar-column.is-today .bar-label {
+      color: #fb923c;
+      font-weight: 700;
+    }
+
+    /* Tooltip ao passar o mouse na barra */
+    .bar-column .bar-tooltip {
+      position: absolute;
+      bottom: 100%;
+      background: #1f2438;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-size: 9px;
+      font-family: var(--font-mono);
+      padding: 3px 6px;
+      border-radius: 6px;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(-2px);
+      transition: opacity 0.15s;
+      z-index: 10;
+    }
+
+    .bar-column:hover .bar-tooltip {
+      opacity: 1;
+    }
+
+    /* Sessão Ativa e Modelo (Apple Squircle #151515) */
+    .session-card {
+      background: #151515;
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+    }
+
+    .session-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .session-title {
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .model-badge {
+      font-size: 9px;
+      font-weight: 700;
+      color: #818cf8;
+      background: rgba(99, 102, 241, 0.12);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      padding: 1px 5px;
+      border-radius: 5px;
+    }
+
+    .session-meta {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    .active-dot-pulsing {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #34d399;
+      box-shadow: 0 0 6px #34d399;
+    }
+
+    /* Modal / Gaveta de Configurações */
+    .config-modal {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: rgba(10, 11, 16, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 18px;
+      flex-direction: column;
+      gap: 14px;
+      z-index: 50;
+    }
+
+    .config-modal.open {
+      display: flex;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 10px;
+    }
+
+    .modal-title {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .config-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 11px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .form-label {
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .form-input {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      padding: 8px 10px;
+      color: #ffffff;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: var(--accent-gemini);
+      background: rgba(99, 102, 241, 0.05);
+    }
+
+    .btn-save {
+      background: var(--burn-gradient);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: 700;
+      padding: 9px;
+      cursor: pointer;
+      font-size: 12px;
+      margin-top: 6px;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+    }
+
+    .btn-save:hover {
+      opacity: 0.95;
+    }
+
+    /* Rodapé com Status */
+    .widget-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 9px;
+      color: var(--text-muted);
+      padding-top: 2px;
+    }
+
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .footer-right {
+      font-family: var(--font-mono);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="widget-container" id="widgetRoot">
+    
+    <!-- Barra Superior / Alça de Arraste -->
+    <header class="widget-header" id="dragHeader">
+      <div class="brand">
+        <div class="flame-icon-box">🔥</div>
+        <div>
+          <div class="brand-title">Gemini Burn</div>
+          <div class="brand-subtitle">Antigravity Workflow</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="status-badge" id="statusBadge">
+          <div class="status-dot"></div>
+          <span id="statusText">LIVE</span>
+        </div>
+        <button class="icon-btn" id="btnPin" title="Fixar na tela (não fechar ao clicar fora)">
+          📌
+        </button>
+        <button class="icon-btn" id="btnRefresh" title="Atualizar agora">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+          </svg>
+        </button>
+        <button class="icon-btn" id="btnConfig" title="Configurações">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+        <button class="icon-btn" id="btnCloseWidget" title="Ocultar janela" style="color: #ef4444;">
+          ✕
+        </button>
+      </div>
+    </header>
+
+
+    <!-- Card Principal: Daily Burn -->
+    <section class="burn-hero-card">
+      <div class="card-label-row">
+        <span class="section-title">Consumo de Hoje</span>
+        <div class="pace-pill" id="paceBadge">
+          <span id="paceText">Ativo ⚡</span>
+        </div>
+      </div>
+
+      <div class="metrics-big-row">
+        <div class="metric-value-box">
+          <div class="big-number">
+            <span id="todayReqs">0</span>
+            <span class="number-unit">reqs</span>
+          </div>
+          <span class="metric-sub" id="todayTokensSub">~0 tokens</span>
+        </div>
+        <div class="metric-value-box" style="text-align: right; align-items: flex-end;">
+          <div class="big-number" style="font-size: 20px; color: #fb923c;">
+            <span id="todayVelocity">0</span>
+            <span class="number-unit">req/h</span>
+          </div>
+          <span class="metric-sub" id="todayTokensSplit">0 in • 0 out</span>
+        </div>
+      </div>
+
+      <div class="progress-section">
+        <div class="progress-bar-bg">
+          <div class="progress-fill" id="progressBar"></div>
+        </div>
+        <div class="progress-labels">
+          <span id="progressSummary">0 de 500 reqs diárias</span>
+          <span class="progress-pct" id="progressPct">0%</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Estatísticas Secundárias: Semana & Ferramentas -->
+    <section class="stats-dual-grid">
+      <div class="stat-mini-card">
+        <span class="mini-card-title">Semana Atual</span>
+        <div class="mini-card-val" id="weekReqs">0</div>
+        <div class="mini-card-sub" id="weekTokens">0 tokens</div>
+      </div>
+      <div class="stat-mini-card">
+        <span class="mini-card-title">Ferramentas / Ações</span>
+        <div class="mini-card-val" id="toolsCount">0</div>
+        <div class="mini-card-sub" id="lastActiveAgo">última: agora</div>
+      </div>
+    </section>
+
+    <!-- Mini Gráfico de Barras dos Últimos 7 Dias -->
+    <section class="sparkline-section">
+      <div class="sparkline-header">
+        <span>Histórico Recente (7 Dias)</span>
+        <span id="sparklineMax" style="font-family: var(--font-mono);">max: 0 req</span>
+      </div>
+      <div class="bars-container" id="sparklineBars">
+        <!-- Renderizado dinamicamente via JS -->
+      </div>
+    </section>
+
+    <!-- Sessão Ativa & Modelo Atual -->
+    <section class="session-card">
+      <div class="session-info">
+        <div class="session-title">
+          <div class="active-dot-pulsing"></div>
+          <span id="modelName">Gemini 3.8 Flash</span>
+        </div>
+        <div class="session-meta">
+          ID: <span id="activeConvShort">idle</span>
+        </div>
+      </div>
+      <span class="model-badge">Antigravity IDE</span>
+    </section>
+
+    <!-- Rodapé -->
+    <footer class="widget-footer">
+      <div class="footer-left">
+        <span>● Zorin Desktop</span>
+      </div>
+      <div class="footer-right">
+        Atualizado: <span id="lastUpdated">--:--:--</span>
+      </div>
+    </footer>
+
+    <!-- Modal de Configuração -->
+    <div class="config-modal" id="configModal">
+      <div class="modal-header">
+        <span class="modal-title">⚙️ Ajustes do Widget</span>
+        <button class="icon-btn" id="btnCloseConfig">✕</button>
+      </div>
+      <div class="config-form">
+        <div class="form-group">
+          <label class="form-label">Meta Diária de Requisições (Soft Limit)</label>
+          <input type="number" class="form-input" id="cfgDailyLimit" value="500">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Intervalo de Atualização (segundos)</label>
+          <input type="number" class="form-input" id="cfgInterval" value="5" min="1" max="60">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Média de Caracteres por Token</label>
+          <input type="number" step="0.1" class="form-input" id="cfgCharsPerTok" value="4.0">
+        </div>
+        <button class="btn-save" id="btnSaveConfig">Salvar Preferências</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let refreshIntervalMs = 4000;
+    let timerId = null;
+
+    async function fetchStats() {
+      const btnRefresh = document.getElementById('btnRefresh');
+      btnRefresh.classList.add('spinning');
+      try {
+        const res = await fetch('/api/stats');
+        if (!res.ok) throw new Error('Falha na resposta');
+        const data = await res.json();
+        updateUI(data);
+      } catch (err) {
+        console.warn('Erro ao atualizar métricas:', err);
+        document.getElementById('statusText').innerText = 'OFFLINE';
+        document.getElementById('statusBadge').style.borderColor = 'rgba(239, 68, 68, 0.4)';
+        document.getElementById('statusBadge').style.color = '#ef4444';
+      } finally {
+        setTimeout(() => btnRefresh.classList.remove('spinning'), 500);
+      }
+    }
+
+    function updateUI(data) {
+      if (!data) return;
+
+      const today = data.today || {};
+      const pct = Math.min(100, today.pct || 0);
+
+      // Sistema de Cores Dinâmico Apple HIG (Dark Mode System Colors)
+      // Até 49%: Apple System Green (#30D158)
+      // 50% a 69%: Apple System Yellow (#FFD60A)
+      // 70%+: Apple System Red (#FF453A)
+      let tierColor, tierBg;
+      if (pct >= 70) {
+        tierColor = '#FF453A'; // Apple System Red
+        tierBg = 'rgba(255, 69, 58, 0.18)';
+      } else if (pct >= 50) {
+        tierColor = '#FFD60A'; // Apple System Yellow
+        tierBg = 'rgba(255, 214, 10, 0.16)';
+      } else {
+        tierColor = '#30D158'; // Apple System Green
+        tierBg = 'rgba(48, 209, 88, 0.16)';
+      }
+
+      // Status
+      document.getElementById('statusText').innerText = 'LIVE';
+      document.getElementById('statusBadge').style.borderColor = tierColor;
+      document.getElementById('statusBadge').style.color = tierColor;
+      document.getElementById('statusBadge').style.backgroundColor = tierBg;
+      document.getElementById('lastUpdated').innerText = data.updated_at || '--:--:--';
+
+      // Hoje
+      document.getElementById('todayReqs').innerText = today.reqs ?? 0;
+      document.getElementById('todayTokensSub').innerText = `~${today.total_tokens_fmt || '0'} tokens`;
+      document.getElementById('todayTokensSplit').innerText = `${today.tokens_in_fmt || '0'} in • ${today.tokens_out_fmt || '0'} out`;
+      
+      const progressBar = document.getElementById('progressBar');
+      progressBar.style.width = `${pct}%`;
+      progressBar.style.background = tierColor;
+      progressBar.style.boxShadow = `0 0 10px ${tierColor}80`;
+
+      const progressPct = document.getElementById('progressPct');
+      progressPct.innerText = `${pct}%`;
+      progressPct.style.color = tierColor;
+
+      document.getElementById('progressSummary').innerText = `${today.reqs || 0} de ${today.limit || 500} reqs diárias`;
+
+      // Ritmo / Velocidade
+      const pace = data.pace || {};
+      const todayVelocity = document.getElementById('todayVelocity');
+      todayVelocity.innerText = pace.reqs_hour ?? 0;
+      todayVelocity.style.color = tierColor;
+
+      const paceBadge = document.getElementById('paceBadge');
+      const paceText = document.getElementById('paceText');
+      paceText.innerText = pace.label || 'Ativo ⚡';
+      paceBadge.className = 'pace-pill ' + (pace.class || 'active');
+      paceBadge.style.color = tierColor;
+      paceBadge.style.borderColor = tierColor;
+      paceBadge.style.backgroundColor = tierBg;
+
+      // Semana & Ferramentas
+      const week = data.week || {};
+      document.getElementById('weekReqs').innerText = `${week.reqs || 0} reqs`;
+      document.getElementById('weekTokens').innerText = `~${week.total_tokens_fmt || '0'} tokens`;
+
+      const session = data.session || {};
+      document.getElementById('toolsCount').innerText = `${session.tools_count || 0} tools`;
+      document.getElementById('lastActiveAgo').innerText = `última: ${session.last_active || 'agora'}`;
+      document.getElementById('modelName').innerText = session.model || 'Gemini 3.8 Flash';
+      document.getElementById('activeConvShort').innerText = session.active_conv_short || 'idle';
+
+      // Sparkline (7 dias)
+      renderSparkline(data.sparkline || [], tierColor);
+    }
+
+    function renderSparkline(days, tierColor = '#30D158') {
+      const container = document.getElementById('sparklineBars');
+      container.innerHTML = '';
+      if (!days || days.length === 0) return;
+
+      const maxReqs = Math.max(...days.map(d => d.reqs || 0), 10);
+      document.getElementById('sparklineMax').innerText = `pico: ${maxReqs} reqs`;
+
+      days.forEach(day => {
+        const col = document.createElement('div');
+        col.className = 'bar-column' + (day.is_today ? ' is-today' : '');
+        
+        const reqs = day.reqs || 0;
+        const heightPct = Math.max(8, Math.round((reqs / maxReqs) * 100));
+
+        col.innerHTML = `
+          <div class="bar-tooltip">${day.date}: ${reqs} reqs (${day.tokens_fmt})</div>
+          <div class="bar-fill" style="height: ${heightPct}%; ${day.is_today ? `background: ${tierColor}; box-shadow: 0 0 10px ${tierColor}80;` : ''}"></div>
+          <div class="bar-label" style="${day.is_today ? `color: ${tierColor}; font-weight: 700;` : ''}">${day.label}</div>
+        `;
+        container.appendChild(col);
+      });
+    }
+
+    // Configurações e Interações
+    document.getElementById('btnRefresh').addEventListener('click', fetchStats);
+
+    let isPinned = false;
+    const btnPin = document.getElementById('btnPin');
+    btnPin.addEventListener('click', () => {
+      isPinned = !isPinned;
+      btnPin.style.background = isPinned ? 'rgba(249, 115, 22, 0.3)' : '';
+      btnPin.style.borderColor = isPinned ? '#f97316' : '';
+      btnPin.title = isPinned ? 'Janela Fixada (clique para desafixar)' : 'Fixar na tela';
+      fetch('/api/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pinned: isPinned })
+      }).catch(() => {});
+    });
+
+    document.getElementById('btnCloseWidget').addEventListener('click', async () => {
+      try {
+        await fetch('/api/hide', { method: 'POST' });
+      } catch (e) {}
+    });
+    
+    const configModal = document.getElementById('configModal');
+    document.getElementById('btnConfig').addEventListener('click', () => {
+      configModal.classList.add('open');
+    });
+
+    document.getElementById('btnCloseConfig').addEventListener('click', () => {
+      configModal.classList.remove('open');
+    });
+
+
+    document.getElementById('btnSaveConfig').addEventListener('click', async () => {
+      const dailyLimit = parseInt(document.getElementById('cfgDailyLimit').value, 10);
+      const interval = parseInt(document.getElementById('cfgInterval').value, 10);
+      const charsPerTok = parseFloat(document.getElementById('cfgCharsPerTok').value);
+
+      try {
+        await fetch('/api/config', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            daily_request_limit: dailyLimit,
+            refresh_interval_sec: interval,
+            chars_per_token: charsPerTok
+          })
+        });
+        configModal.classList.remove('open');
+        refreshIntervalMs = interval * 1000;
+        restartTimer();
+        fetchStats();
+      } catch (e) {
+        alert('Erro ao salvar configurações');
+      }
+    });
+
+    function restartTimer() {
+      if (timerId) clearInterval(timerId);
+      timerId = setInterval(fetchStats, refreshIntervalMs);
+    }
+
+    // Inicialização
+    fetchStats();
+    restartTimer();
+  </script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+# Swift / Xcode / macOS build artifacts
+.build/
+*.app
+*.appex
+*.dSYM
+.swiftpm/
+xcuserdata/
+DerivedData/
+ModuleCache/
+
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+ENV/
+
+# Editors / IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

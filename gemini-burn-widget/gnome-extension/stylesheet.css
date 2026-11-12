@@ -1,0 +1,215 @@
+/* ==========================================================================
+   Gemini Burn - Apple Widget Design Theme
+   Fundo geral: #2f2f2f com efeito glass/translucência
+   Cards internos: #151515 (estilo Apple Sonoma / iOS Squircle Widgets)
+   ========================================================================== */
+
+/* Indicador no Painel Superior (mantém a cor da barra do usuário) */
+.gemini-burn-panel-label {
+  font-weight: 700;
+  font-size: 11px;
+  color: #123354;
+  margin-left: 3px;
+}
+
+/* Menu Dropdown - Fundo Geral Glass Apple #2f2f2f */
+.gemini-burn-menu {
+  min-width: 340px;
+  max-width: 360px;
+  padding: 10px;
+  background-color: rgba(47, 47, 47, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 24px;
+}
+
+.popup-menu-item.gemini-burn-menu-item {
+  padding: 0;
+  margin: 0 0 10px 0;
+}
+
+.popup-menu-item.gemini-burn-menu-item:last-child {
+  margin-bottom: 0;
+}
+
+/* Cabeçalho com alinhamento proporcional aos cards */
+.gemini-burn-header-box {
+  padding: 2px 6px;
+}
+
+/* Cards Internos #151515 (Squircle Apple Widgets) */
+.gemini-burn-card {
+  background-color: #151515;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 14px 16px;
+  margin: 0;
+  spacing: 10px;
+}
+
+.gemini-burn-title {
+  font-weight: 700;
+  font-size: 13px;
+  color: #f5f5f7;
+  letter-spacing: -0.2px;
+}
+
+.gemini-burn-subtitle {
+  font-size: 10px;
+  color: #86868b;
+  font-weight: 500;
+}
+
+/* Badges e Pílulas Estilo Apple (Stocks / Status) */
+.gemini-burn-badge {
+  font-size: 9px;
+  font-weight: 600;
+  color: #30d158;
+  background-color: rgba(48, 209, 88, 0.08);
+  border: 1px solid rgba(48, 209, 88, 0.20);
+  border-radius: 6px;
+  padding: 1px 7px;
+  margin-top: 7px;
+  margin-bottom: 7px;
+  margin-right: 2px;
+  height: 16px;
+}
+
+.gemini-burn-badge-label {
+  font-size: 9px;
+  font-weight: 600;
+  color: #30d158;
+}
+
+.gemini-burn-badge.fire {
+  color: #ff453a;
+  background-color: rgba(255, 69, 58, 0.18);
+  border-color: rgba(255, 69, 58, 0.32);
+}
+
+/* Seção de Números Grandes (Display Typography) */
+.gemini-burn-big-num {
+  font-family: monospace;
+  font-size: 26px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+}
+
+.gemini-burn-big-num.orange {
+  font-size: 19px;
+  color: #ff453a;
+}
+
+.gemini-burn-unit {
+  font-size: 10px;
+  font-weight: 600;
+  color: #86868b;
+  margin-left: 3px;
+}
+
+.gemini-burn-subtext {
+  font-size: 10px;
+  color: #86868b;
+  font-weight: 500;
+}
+
+/* Barra de Progresso Estilo Apple Capsule */
+.gemini-burn-progress-bg {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  height: 6px;
+  margin-top: 6px;
+}
+
+.gemini-burn-progress-fill {
+  background-color: #ff453a;
+  border-radius: 6px;
+  height: 6px;
+}
+
+.gemini-burn-pct {
+  font-size: 10px;
+  font-weight: 700;
+  color: #ff453a;
+}
+
+/* Grid de Mini Cards Duplos (#151515) */
+.gemini-burn-grid-container {
+  spacing: 10px;
+  margin: 0;
+  padding: 0;
+}
+
+.gemini-burn-grid-card {
+  background-color: #151515;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 12px 14px;
+  margin: 0;
+  spacing: 4px;
+}
+
+.gemini-burn-label-muted {
+  font-size: 10px;
+  color: #86868b;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.gemini-burn-val-mono {
+  font-family: monospace;
+  font-size: 15px;
+  font-weight: 700;
+  color: #f5f5f7;
+  letter-spacing: -0.2px;
+}
+
+/* Gráfico de Barras dos 7 Dias (Estilo Apple Stocks) */
+.gemini-burn-bar-fill {
+  background-color: rgba(255, 255, 255, 0.12);
+  border-radius: 4px 4px 2px 2px;
+  width: 16px;
+}
+
+.gemini-burn-bar-fill.today {
+  background-color: #ff453a;
+}
+
+.gemini-burn-bar-label {
+  font-size: 9px;
+  color: #86868b;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.gemini-burn-bar-label.today {
+  color: #ff453a;
+  font-weight: 700;
+}
+
+/* Botão Ícone de Atualizar no Cabeçalho (Estilo Apple Glass Circular) */
+.gemini-burn-btn-apple-refresh {
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  padding: 5px 6px;
+  color: #f5f5f7;
+  margin: 0;
+  transition: all 0.15s ease;
+}
+
+.gemini-burn-btn-apple-refresh:hover {
+  background-color: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+.gemini-burn-btn-apple-refresh:active {
+  background-color: rgba(255, 255, 255, 0.28);
+}
+
+.gemini-burn-refresh-icon {
+  color: #f5f5f7;
+  icon-size: 13px;
+}

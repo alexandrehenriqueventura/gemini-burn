@@ -1,0 +1,16 @@
+[Unit]
+Description=Gemini Burn - Monitor de Requisições e Tokens do Antigravity
+After=graphical-session.target network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 %h/.local/share/gemini-burn/main.py --web
+Restart=on-failure
+RestartSec=5s
+Environment="PYTHONUNBUFFERED=1"
+Environment="DISPLAY=:0"
+Environment="WAYLAND_DISPLAY=wayland-0"
+Environment="XDG_CURRENT_DESKTOP=Zorin:GNOME"
+
+[Install]
+WantedBy=default.target
