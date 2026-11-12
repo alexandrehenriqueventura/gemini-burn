@@ -72,7 +72,7 @@ gemini-burn/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/<your-username>/gemini-burn.git
+git clone https://github.com/alexandrehenriqueventura/gemini-burn.git
 cd gemini-burn
 ```
 
